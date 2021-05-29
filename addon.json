@@ -1,0 +1,15 @@
+{
+  "title": "Improved Double Jump!",
+  "type": "ServerContent",
+  "ignore": [
+    ".git*",
+	".vscode*",
+	"*.md",
+    "*.iml",
+    ".idea*",
+    "*.psd",
+    "*.vcproj",
+    "*.svn*",
+    "LICENSE"
+  ]
+}
