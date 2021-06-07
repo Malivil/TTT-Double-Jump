@@ -28,9 +28,15 @@ local function GetMoveVector(mv)
     return vec
 end
 
+local function IsPlayerValid(ply)
+    if not IsValid(ply) or not ply:Alive() then return false end
+    if ply.IsSpec and ply:IsSpec() then return false end
+    return true
+end
+
 hook.Add("SetupMove", "MultiJumpSetupMove", function(ply, mv)
     -- Only run this for Valid, Alive, Non-Spectators
-    if not IsValid(ply) or not ply:Alive() or ply:IsSpec() then return end
+    if not IsPlayerValid(ply) then return end
 
     -- Let the engine handle movement from the ground
     -- Only set the 'jumped' flag if that functionality is enabled
@@ -99,7 +105,7 @@ end)
 if CLIENT then
     net.Receive("TTT_MultiJump", function()
         local ply = net.ReadEntity()
-        if not IsValid(ply) or ply:IsSpec() or not ply:Alive() then return end
+        if not IsPlayerValid(ply) then return end
 
         local pos = ply:GetPos() + Vector(0, 0, 10)
         local client = LocalPlayer()
