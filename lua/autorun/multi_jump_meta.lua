@@ -1,49 +1,49 @@
-local PLAYER = FindMetaTable("Player")
+local plymeta = FindMetaTable("Player")
 
-function PLAYER:GetJumpLevel()
-    return self:GetDTInt(23)
+function plymeta:GetJumpLevel()
+    return self:GetNWInt("MJ_JumpLevel")
 end
 
-function PLAYER:SetJumpLevel(level)
-    self:SetDTInt(23, level)
+function plymeta:SetJumpLevel(level)
+    self:SetNWInt("MJ_JumpLevel", level)
 end
 
-function PLAYER:GetMaxJumpLevel()
-    return self:GetDTInt(24)
+function plymeta:GetMaxJumpLevel()
+    return self:GetNWInt("MJ_MaxJumpLevel")
 end
 
-function PLAYER:SetMaxJumpLevel(level)
-    self:SetDTInt(24, level)
+function plymeta:SetMaxJumpLevel(level)
+    self:SetNWInt("MJ_MaxJumpLevel", level)
 end
 
-function PLAYER:GetExtraJumpPower()
-    return self:GetDTFloat(25)
+function plymeta:GetExtraJumpPower()
+    return self:GetNWFloat("MJ_ExtraJumpPower")
 end
 
-function PLAYER:SetExtraJumpPower(power)
-    self:SetDTFloat(25, power)
+function plymeta:SetExtraJumpPower(power)
+    self:SetNWFloat("MJ_ExtraJumpPower", power)
 end
 
-function PLAYER:GetJumped()
-    return self:GetDTInt(26)
+function plymeta:GetJumped()
+    return self:GetNWInt("MJ_Jumped")
 end
 
-function PLAYER:SetJumped(jumped)
-    self:SetDTInt(26, jumped)
+function plymeta:SetJumped(jumped)
+    self:SetNWInt("MJ_Jumped", jumped)
 end
 
-function PLAYER:GetMaxJumpDistance()
-    return self:GetDTInt(27)
+function plymeta:GetMaxJumpDistance()
+    return self:GetNWInt("MJ_MaxJumpDistance")
 end
 
-function PLAYER:SetMaxJumpDistance(max_distance)
-    self:SetDTInt(27, max_distance)
+function plymeta:SetMaxJumpDistance(max_distance)
+    self:SetNWInt("MJ_MaxJumpDistance", max_distance)
 end
 
-function PLAYER:GetJumpLocation()
-    return self:GetDTVector(28)
+function plymeta:GetJumpLocation()
+    return self:GetNWVector("MJ_JumpLocation")
 end
 
-function PLAYER:SetJumpLocation(loc)
-    self:SetDTVector(28, loc)
+function plymeta:SetJumpLocation(loc)
+    self:SetNWVector("MJ_JumpLocation", loc)
 end
