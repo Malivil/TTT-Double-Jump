@@ -2,27 +2,30 @@ if SERVER then
     util.AddNetworkString("TTT_MultiJump")
 end
 
-local function GetMoveVector(mv)
-    local ang = mv:GetAngles()
+local math = math
+local net = net
 
+local MathAbs = math.abs
+local MathClamp = math.Clamp
+local MathRandom = math.random
+
+local function GetMoveVector(mv)
     local max_speed = mv:GetMaxSpeed()
 
-    local forward = math.Clamp(mv:GetForwardSpeed(), -max_speed, max_speed)
-    local side = math.Clamp(mv:GetSideSpeed(), -max_speed, max_speed)
-
-    local abs_xy_move = math.abs(forward) + math.abs(side)
+    local forward = MathClamp(mv:GetForwardSpeed(), -max_speed, max_speed)
+    local side = MathClamp(mv:GetSideSpeed(), -max_speed, max_speed)
+    local abs_xy_move = MathAbs(forward) + MathAbs(side)
 
     if abs_xy_move == 0 then
         return Vector(0, 0, 0)
     end
 
     local mul = max_speed / abs_xy_move
-
+    local ang = mv:GetAngles()
     local vec = Vector()
 
     vec:Add(ang:Forward() * forward)
     vec:Add(ang:Right() * side)
-
     vec:Mul(mul)
 
     return vec
@@ -40,10 +43,12 @@ hook.Add("SetupMove", "MultiJumpSetupMove", function(ply, mv)
 
     -- Let the engine handle movement from the ground
     -- Only set the 'jumped' flag if that functionality is enabled
-    if ply:OnGround() and mv:KeyPressed(IN_JUMP) and ply:GetJumped() ~= -1 then
+    local on_ground = ply:OnGround()
+    local jumping = mv:KeyPressed(IN_JUMP)
+    if on_ground and jumping and ply:GetJumped() ~= -1 then
         ply:SetJumped(1)
         return
-    elseif ply:OnGround() then
+    elseif on_ground then
         ply:SetJumpLevel(0)
         ply:SetJumpLocation(vector_origin)
         -- Only set the 'jumped' flag if that functionality is enabled
@@ -67,7 +72,7 @@ hook.Add("SetupMove", "MultiJumpSetupMove", function(ply, mv)
             ply:SetJumpLocation(jump_loc)
         else
             local new_height = ply:GetPos().z
-            local distance = math.abs(jump_loc.z - new_height)
+            local distance = MathAbs(jump_loc.z - new_height)
             if distance > max_distance then
                 return
             end
@@ -75,17 +80,18 @@ hook.Add("SetupMove", "MultiJumpSetupMove", function(ply, mv)
     end
 
     -- Don't do anything if not jumping
-    if not mv:KeyPressed(IN_JUMP) then
+    if not jumping then
         return
     end
 
-    ply:SetJumpLevel(ply:GetJumpLevel() + 1)
+    local jump_level = ply:GetJumpLevel() + 1
+    ply:SetJumpLevel(jump_level)
 
-    if not ply:OnGround() and ply:GetJumped() == 0 then
+    if not on_ground and ply:GetJumped() == 0 then
         return
     end
 
-    if ply:GetJumpLevel() > ply:GetMaxJumpLevel() then
+    if jump_level > ply:GetMaxJumpLevel() then
         return
     end
 
@@ -107,27 +113,28 @@ if CLIENT then
         local ply = net.ReadEntity()
         if not IsPlayerValid(ply) then return end
 
-        local pos = ply:GetPos() + Vector(0, 0, 10)
+        local ply_pos = ply:GetPos()
+        local pos = ply_pos + Vector(0, 0, 10)
         local client = LocalPlayer()
         if client:GetPos():Distance(pos) > 1000 then return end
 
         local emitter = ParticleEmitter(pos)
-        for _ = 0, math.random(40, 50) do
-            local partpos = ply:GetPos() + Vector(math.random(-10, 10), math.random(-10, 10), 10)
+        for _ = 0, MathRandom(40, 50) do
+            local partpos = ply_pos + Vector(MathRandom(-10, 10), MathRandom(-10, 10), 10)
             local part = emitter:Add("particle/particle_smokegrenade", partpos)
             if part then
-                part:SetDieTime(math.random(0.4, 0.7))
-                part:SetStartAlpha(math.random(200, 240))
+                part:SetDieTime(MathRandom(0.4, 0.7))
+                part:SetStartAlpha(MathRandom(200, 240))
                 part:SetEndAlpha(0)
-                part:SetColor(math.random(200, 220), math.random(200, 220), math.random(200, 220))
+                part:SetColor(MathRandom(200, 220), MathRandom(200, 220), MathRandom(200, 220))
 
-                part:SetStartSize(math.random(6, 8))
+                part:SetStartSize(MathRandom(6, 8))
                 part:SetEndSize(0)
 
                 part:SetRoll(0)
                 part:SetRollDelta(0)
 
-                local velocity = VectorRand() * math.random(10, 15);
+                local velocity = VectorRand() * MathRandom(10, 15);
                 velocity.z = 5;
                 part:SetVelocity(velocity)
             end
