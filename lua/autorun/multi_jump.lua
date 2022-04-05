@@ -17,7 +17,7 @@ local function GetMoveVector(mv)
     local abs_xy_move = MathAbs(forward) + MathAbs(side)
 
     if abs_xy_move == 0 then
-        return Vector(0, 0, 0)
+        return mv:GetVelocity()
     end
 
     local mul = max_speed / abs_xy_move
@@ -28,7 +28,18 @@ local function GetMoveVector(mv)
     vec:Add(ang:Right() * side)
     vec:Mul(mul)
 
-    return vec
+    -- Keep whichever is the greater movement velocity
+    -- This allows the player to use movement methods without direct forward input
+    -- while also maintaining the ability to change direction mid-air using inputs
+    local vel = mv:GetVelocity()
+    if MathAbs(vec.x) > MathAbs(vel.x) then
+        vel.x = vec.x
+    end
+    if MathAbs(vec.y) > MathAbs(vel.y) then
+        vel.y = vec.y
+    end
+
+    return vel
 end
 
 local function IsPlayerValid(ply)
