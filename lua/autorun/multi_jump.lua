@@ -69,6 +69,11 @@ hook.Add("SetupMove", "MultiJumpSetupMove", function(ply, mv)
         return
     end
 
+    -- If the prone mod is installed and the player is prone, they can't jump
+    if type(ply.IsProne) == "function" and ply:IsProne() then
+        return
+    end
+
     -- Ignore if the player is on a ladder
     if ply:GetMoveType() == MOVETYPE_LADDER then
         return
