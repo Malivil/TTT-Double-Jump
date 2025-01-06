@@ -60,17 +60,22 @@ hook.Add("SetupMove", "MultiJumpSetupMove", function(ply, mv)
         ply:SetJumped(1)
         return
     elseif on_ground then
-        ply:SetJumpLevel(0)
-        ply:SetJumpLocation(vector_origin)
-        -- Only set the 'jumped' flag if that functionality is enabled
-        if ply:GetJumped() ~= -1 then
-            ply:SetJumped(0)
-        end
+        ply:ResetJumpState()
         return
     end
 
     -- If the prone mod is installed and the player is prone, they can't jump
     if type(ply.IsProne) == "function" and ply:IsProne() then
+        return
+    end
+
+    -- If the vaulting mod is installed and the player is vaulting, they can't jump
+    if type(ply.GetMantle) == "function" and ply:GetMantle() ~= 0 then
+        return
+    end
+
+    -- If the mantling mod is installed and the player is mantling, they can't jump
+    if ply.InMantle then
         return
     end
 

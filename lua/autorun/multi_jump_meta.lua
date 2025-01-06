@@ -47,3 +47,14 @@ end
 function plymeta:SetJumpLocation(loc)
     self:SetDTVector(28, loc)
 end
+
+function plymeta:ResetJumpState()
+    if self:GetJumpLevel() ~= 0 then
+        self:SetJumpLevel(0)
+        self:SetJumpLocation(vector_origin)
+        -- Only set the 'jumped' flag if that functionality is enabled
+        if self:GetJumped() ~= -1 then
+            self:SetJumped(0)
+        end
+    end
+end

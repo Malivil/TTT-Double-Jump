@@ -61,7 +61,12 @@ hook.Add("Initialize", "MultiJumpPostInitialize", function()
         function plymeta:SetMantle(mantle)
             oldSetMantle(self, mantle)
             if can_jump_after_vaulting:GetBool() and mantle == 0 then
-                self:SetJumpLevel(0)
+                -- Delay this slightly so we don't auto-jump immediately after the vault finishes
+                timer.Simple(0.25, function()
+                    if IsValid(self) then
+                        self:ResetJumpState()
+                    end
+                end)
             end
         end
     end
@@ -72,7 +77,16 @@ end)
 hook.Add("PlayerPostThink", "MultiJumpPlayerPostThink", function(ply)
     if not can_jump_after_vaulting:GetBool() then return end
 
-    if ply.InMantle or ply.InVWallrun or ply.InHWallrun then
-        ply:SetJumpLevel(0)
+    if ply.InMantle then
+        -- Delay this slightly so we don't auto-jump immediately after the mantle finishes
+        timer.Simple(0.25, function()
+            if IsValid(ply) and ply.InMantle then
+                ply:ResetJumpState()
+            end
+        end)
+    end
+
+    if ply.InVWallrun or ply.InHWallrun then
+        ply:ResetJumpState()
     end
 end)
