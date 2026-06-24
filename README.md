@@ -5,20 +5,23 @@ Thanks to [GengarDC](https://steamcommunity.com/id/GengarDC) for the '[TTT_Doubl
 
 # Changes from the Original Version
 - Replaced the jumping particle effect to remove the Team-Fortress 2 requirement
-- Added a setting to disallow multi-jumping if you didn't jump originally (e.g. were batted or fell)
+- Added a setting to disallow multi-jumping if you've fallen too far
+- Added a setting to disallow multi-jumping if you didn't jump originally (e.g. were batted or fell), thanks to GengarDC!
+- Added a setting to disallow multi-jumping if you've just vaulted or wall-ran (with a compatible addon)
+- Added calling of `OnPlayerJump` for each multi-jump
 
 # Configurations
-_multijump_default_jumps_ - Default: 1
-The amount of extra jumps players should get
+```cpp
+multijump_default_jumps           1 // The amount of extra jumps players should get
+multijump_default_power           1 // Multiplier for the jump-power when multi jumping
+multijump_max_fall_distance       0 // The maximum distance a player can fall before multi jump is disabled
+multijump_can_jump_while_falling  1 // Whether the player should be able to multi-jump if they didn't jump to begin with
+multijump_can_jump_after_vaulting 1 // Whether the player should be able to multi-jump after they finish vaulting or wallrunning. Explicitly compatible with VManip Vaulting (https://steamcommunity.com/sharedfiles/filedetails/?id=2364206712) and Mantle + Wallrun (https://steamcommunity.com/sharedfiles/filedetails/?id=2027577882)
+```
 
-_multijump_default_power_ - Default: 1
-Multiplier for the jump-power when multi jumping
-
-_multijump_max_fall_distance_ - Default: 0
-The maximum distance a player can fall before multi jump is disabled
-
-_multijump_can_jump_while_falling_ - Default: 1
-Whether the player should be able to multi-jump if they didn't jump to begin with
+# Hooks
+## OnPlayerJump(ply, speed, multi)
+Modified to add a third parameter that will be `true` if the hook is called from a multi-jump
 
 # Special Thanks
 - [Willox](https://steamcommunity.com/id/willox) for the ['Double Jump!'](https://steamcommunity.com/sharedfiles/filedetails/?id=284538302) mod.

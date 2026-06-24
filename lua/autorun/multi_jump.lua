@@ -120,6 +120,11 @@ hook.Add("SetupMove", "MultiJumpSetupMove", function(ply, mv)
     vel.z = ply:GetJumpPower() * ply:GetExtraJumpPower()
     mv:SetVelocity(vel)
 
+    -- This hook is predicted. This means that in singleplayer, it will not be called in the Client realm.
+    if not CLIENT or not game.SinglePlayer() then
+        hook.Run("OnPlayerJump", ply, vel.z, true)
+    end
+
     ply:DoCustomAnimEvent(PLAYERANIMEVENT_JUMP , -1)
 
     if SERVER then
